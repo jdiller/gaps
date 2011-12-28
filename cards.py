@@ -41,3 +41,6 @@ class Deck(object):
         for c in self.cards:
             print c.short()
 
+class PartialDeck(Deck):
+    def __init__(self, cards):
+        self.cards = cards
