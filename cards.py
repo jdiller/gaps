@@ -22,6 +22,8 @@ class Card(object):
         shorts = ["♥","♣", "♦", "♠"]
         return shorts[self.suit[1]]
 
+    def __eq__(self, other):
+        return self.rank == other.rank and self.suit == other.suit
 
 class Deck(object):
     def __init__(self):
