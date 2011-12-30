@@ -128,6 +128,18 @@ class Tableau(object):
             target_loc = (target_loc[0], target_loc[1]+1)
             return target_loc
 
+    def find_moveable_for_gap(self, gap):
+        if gap[1] == 0:
+            twos = [pos for pos in self.find_by_rank(Ranks.TWO) if pos[1] > 0]
+            return twos[0]
+
+        neighbour = self.card_at((gap[0], gap[1]-1))
+        loc = None
+        if neighbour != None and neighbour.rank != Ranks.KING:
+            loc = self.find_card(Card(neighbour.suit,
+                Ranks.higher_rank(neighbour.rank)))
+        return loc
+
     def find_card(self, card):
         found = self.find_by_rank(card.rank)
         for f in found:
