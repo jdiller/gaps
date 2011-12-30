@@ -1,3 +1,5 @@
+from cards import Ranks
+
 class MoveLeftMostMoveable(object):
     #always finds and moves left-most card that can be moved
     def apply_strategy(self, tableau):
@@ -56,4 +58,20 @@ class MoveLowestRankFirst(object):
 
         gap = tableau.find_gap_for_moveable(lowest)
         tableau.swap(lowest, gap)
+
+class AvoidMakingBlockingGaps(object):
+    def apply_strategy(self, tableau):
+        moveables = tableau.find_moveable()
+        candidates = []
+        for m in moveables:
+            if m[1] == 0 or \
+                    tableau.card_at((m[0],m[1]-1)) is None or \
+                    tableau.card_at((m[0],m[1]-1)).rank != Ranks.KING:
+                candidates.append(m)
+        if len(candidates) > 0:
+            gap = tableau.find_gap_for_moveable(candidates[0])
+            tableau.swap(gap, candidates[0])
+        else:
+            backup_strategy = FillRightMostGap()
+            backup_strategy.apply_strategy(tableau)
 
