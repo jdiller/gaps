@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from gaps.tableau import Tableau
-from gaps.cards import Card
+from gaps.cards import Card, Suits, Ranks
 
 def test_tableau_has_four_rows():
     t = Tableau()
@@ -33,6 +33,50 @@ def test_can_detect_busted_tableau():
         assert not tab.has_moves()
         assert not tab.is_complete()
 
+def test_no_moveables_in_busted_tableau():
+    tab = busted_tableau()
+    moveables = tab.find_moveable()
+    assert len(moveables) == 0
+
+def test_no_moveables_in_winning_tableau():
+    tab = winning_tableau()
+    moveables = tab.find_moveable()
+    assert len(moveables) == 0
+
+def test_new_tableau_has_moveables():
+    for i in range(1000):
+        tab = Tableau()
+        while not tab.has_moves():
+            tab = Tableau()
+        moveables = tab.find_moveable()
+        assert len(moveables) > 0
+
+def test_moveables_are_moveable():
+    for i in range(1000):
+        tab = Tableau()
+        while not tab.has_moves():
+            tab = Tableau()
+        moveables = tab.find_moveable()
+        for m in moveables:
+            card = tab.card_at(m)
+            if card.rank == Ranks.TWO:
+                left_gaps = [gap for gap in tab.find_gaps() if gap[1] == 0]
+                assert len(left_gaps) > 0
+            else:
+                target_card = Card(card.suit, Ranks.lower_rank(card.rank))
+                assert target_card is not None
+                target_loc = tab.find_card(target_card)
+                assert tab.card_at((target_loc[0], target_loc[1]+1)) is None 
+
+def test_can_find_every_card():
+    tab = Tableau()
+    for row in range(len(tab.grid)):
+        for col in range(len(tab.grid[row])):
+            card = tab.card_at((row,col))
+            if card is not None:
+                loc = tab.find_card(card)
+                assert loc[0] == row and loc[1] == col
+
 def test_can_find_gaps():
     #because tabs start random, repeat a bunch of times to compensate
     for i in range(1000):
@@ -44,7 +88,7 @@ def test_can_find_gaps():
 
 def test_can_find_kings():
     #because tabs start random, repeat a bunch of times to compensate
-    king = ("K", 13)
+    king = Ranks.KING
     for i in range(1000):
         tab = Tableau()
         kings = tab.find_kings()
@@ -52,12 +96,23 @@ def test_can_find_kings():
         for k in kings:
             assert tab.grid[k[0]][k[1]].rank == king
 
+def test_can_swap_cards():
+    tab = Tableau()
+    pos1 = (1,1)
+    pos2 = (1,12)
+    card1_before = tab.card_at(pos1)
+    card2_before = tab.card_at(pos2)
+    tab.swap(pos1, pos2)
+    card1_after = tab.card_at(pos1)
+    card2_after = tab.card_at(pos2)
+    assert card1_after == card2_before
+    assert card2_after == card1_before
 
 def winning_tableau():
     tab = Tableau()
     for i in range(4):
         for j in range(1,13):
-            card = Card(Card.suits[i],Card.ranks[j])
+            card = Card(Suits.all_suits[i],Ranks.all_ranks[j])
             tab.grid[i][j-1] = card
         tab.grid[i][12] = None
     tab.dump()

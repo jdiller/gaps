@@ -1,4 +1,4 @@
-from gaps.cards import Deck, Card, PartialDeck
+from gaps.cards import Deck, Card, PartialDeck, Suits, Ranks
 
 def test_deck_has_52_cards():
     d = Deck()
@@ -20,8 +20,8 @@ def test_shuffled_deck_has_no_duplicates():
     assert compare_cards(cards, new_deck.cards)
 
 def test_card_equality():
-    card1 = Card(Card.suits[2], Card.ranks[3])
-    card2 = Card(Card.suits[2], Card.ranks[3])
+    card1 = Card(Suits.HEARTS, Ranks.THREE)
+    card2 = Card(Suits.HEARTS, Ranks.THREE)
     assert card1 == card2
 
 def test_can_make_partial_deck():
@@ -37,6 +37,36 @@ def test_can_make_partial_deck():
     partial = PartialDeck(stack)
     partial.shuffle()
     assert compare_cards(unshuffle(partial.cards), control_deck)
+
+def test_get_higher_rank():
+    assert Ranks.higher_rank(Ranks.ACE) == Ranks.TWO
+    assert Ranks.higher_rank(Ranks.TWO) == Ranks.THREE
+    assert Ranks.higher_rank(Ranks.THREE) == Ranks.FOUR
+    assert Ranks.higher_rank(Ranks.FOUR) == Ranks.FIVE
+    assert Ranks.higher_rank(Ranks.FIVE) == Ranks.SIX
+    assert Ranks.higher_rank(Ranks.SIX) == Ranks.SEVEN
+    assert Ranks.higher_rank(Ranks.SEVEN) == Ranks.EIGHT
+    assert Ranks.higher_rank(Ranks.EIGHT) == Ranks.NINE
+    assert Ranks.higher_rank(Ranks.NINE) == Ranks.TEN
+    assert Ranks.higher_rank(Ranks.TEN) == Ranks.JACK
+    assert Ranks.higher_rank(Ranks.JACK) == Ranks.QUEEN
+    assert Ranks.higher_rank(Ranks.QUEEN) == Ranks.KING
+    assert Ranks.higher_rank(Ranks.KING) == None
+
+def test_get_lower_rank():
+    assert Ranks.lower_rank(Ranks.ACE) == None
+    assert Ranks.lower_rank(Ranks.TWO) == Ranks.ACE
+    assert Ranks.lower_rank(Ranks.THREE) == Ranks.TWO
+    assert Ranks.lower_rank(Ranks.FOUR) == Ranks.THREE
+    assert Ranks.lower_rank(Ranks.FIVE) == Ranks.FOUR
+    assert Ranks.lower_rank(Ranks.SIX) == Ranks.FIVE
+    assert Ranks.lower_rank(Ranks.SEVEN) == Ranks.SIX
+    assert Ranks.lower_rank(Ranks.EIGHT) == Ranks.SEVEN
+    assert Ranks.lower_rank(Ranks.NINE) == Ranks.EIGHT
+    assert Ranks.lower_rank(Ranks.TEN) == Ranks.NINE
+    assert Ranks.lower_rank(Ranks.JACK) == Ranks.TEN
+    assert Ranks.lower_rank(Ranks.QUEEN) == Ranks.JACK
+    assert Ranks.lower_rank(Ranks.KING) == Ranks.QUEEN
 
 def unshuffle(cards):
     return  sorted(cards, key = lambda card: card.suit[1] * 100 + card.rank[1])
