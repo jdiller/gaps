@@ -30,6 +30,30 @@ class FillRightMostGap(object):
                 if tableau.find_moveable_for_gap(g) is not None:
                     right_most = g
 
-        if right_most is not None:
-            moveable = tableau.find_moveable_for_gap(right_most)
-            tableau.swap(right_most, moveable)
+        moveable = tableau.find_moveable_for_gap(right_most)
+        tableau.swap(right_most, moveable)
+
+class MoveHighestRankFirst(object):
+    def apply_strategy(self, tableau):
+        moveables = tableau.find_moveable()
+        highest = None
+        for m in moveables:
+            if highest is None or \
+                tableau.card_at(highest).rank[1] < tableau.card_at(m).rank[1]:
+                    highest = m
+
+        gap = tableau.find_gap_for_moveable(highest)
+        tableau.swap(highest, gap)
+
+class MoveLowestRankFirst(object):
+    def apply_strategy(self, tableau):
+        moveables = tableau.find_moveable()
+        lowest = None
+        for m in moveables:
+            if lowest is None or \
+                tableau.card_at(lowest).rank[1] > tableau.card_at(m).rank[1]:
+                    lowest = m
+
+        gap = tableau.find_gap_for_moveable(lowest)
+        tableau.swap(lowest, gap)
+
