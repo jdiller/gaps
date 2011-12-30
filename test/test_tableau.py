@@ -108,6 +108,15 @@ def test_can_swap_cards():
     assert card1_after == card2_before
     assert card2_after == card1_before
 
+def test_can_redeal():
+    for i in range(1000):
+        tab = busted_tableau()
+        tab.redeal()
+        assert len(tab.find_gaps()) == 4
+        assert len(tab.find_kings()) == 4
+        for row in tab.grid:
+            assert row[0] is None or row[0].rank == Ranks.TWO
+
 def winning_tableau():
     tab = Tableau()
     for i in range(4):

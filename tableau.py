@@ -54,6 +54,38 @@ class Tableau(object):
 
         self.grid[row1][col1], self.grid[row2][col2] = \
             self.grid[row2][col2], self.grid[row1][col1]
+
+    def redeal(self):
+        cards_to_redeal = []
+        i = 0
+        for row in self.grid:
+            rank = 1
+            j = 0
+            remove_rest = False
+            for card in row:
+                if card is None:
+                    remove_rest = True
+                elif remove_rest or card.rank != Ranks.all_ranks[rank]:
+                    cards_to_redeal.append(card)
+                    self.grid[i][j] = None
+                    remove_rest = True
+                else:
+                    rank = rank + 1
+                    if rank >= len(Ranks.all_ranks):
+                        remove_rest = True
+                j = j + 1
+            i = i + 1
+        cards_to_redeal.reverse()
+        for i in range(len(self.grid)):
+            gap_in_row = False
+            for j in range(len(self.grid[i])):
+                if self.grid[i][j] is None:
+                    if gap_in_row:
+                        self.grid[i][j] = cards_to_redeal.pop()
+                    else:
+                        gap_in_row = True
+
+
     def find_gaps(self):
         gaps = []
         for i in range(4):
@@ -83,6 +115,18 @@ class Tableau(object):
                     moveable_loc = self.find_card(moveable_card)
                     moveable.append(moveable_loc)
         return moveable
+
+    def find_gap_for_moveable(self, moveable):
+        moveable_card = self.card_at(moveable)
+        if moveable_card.rank == Ranks.TWO:
+            gaps = [g for g in self.find_gaps() if g[1] == 0]
+            return gaps[0]
+        else:
+            target_loc = self.find_card(Card(moveable_card.suit,
+                    Ranks.lower_rank(moveable_card.rank)))
+
+            target_loc = (target_loc[0], target_loc[1]+1)
+            return target_loc
 
     def find_card(self, card):
         found = self.find_by_rank(card.rank)
