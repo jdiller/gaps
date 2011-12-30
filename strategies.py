@@ -1,5 +1,3 @@
-from tableau import Tableau
-
 class MoveLeftMostMoveable(object):
     #always finds and moves left-most card that can be moved
     def apply_strategy(self, tableau):

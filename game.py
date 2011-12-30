@@ -1,11 +1,13 @@
 from tableau import Tableau
-from strategies import MoveLeftMostMoveable
+import strategies
 
 class Game(object):
-    def __init__(self):
+    def __init__(self, strategy):
+        S = getattr(strategies, strategy)
+        strategy = S()
         self.tableau = Tableau()
         self.redeals = 2
-        self.strategy = MoveLeftMostMoveable()
+        self.strategy = strategy
 
     def play(self):
         while True:
