@@ -16,6 +16,7 @@ class Tableau(object):
                 n += 1
 
     def dump(self):
+        ret = ""
         for i in range(0,4):
             row = ""
             for j in range(0,13):
@@ -23,7 +24,8 @@ class Tableau(object):
                     row += "[     ] "
                 else:
                     row += self.card_at((i,j)).short() + " "
-            print row
+            ret += row + "\n"
+        return ret
 
     def has_moves(self):
         for i in range(0,4):
