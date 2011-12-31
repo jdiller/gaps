@@ -2,13 +2,16 @@ from game import Game
 from datetime import datetime
 from optparse import OptionParser
 import curses
+import locale
 
+locale.setlocale(locale.LC_ALL,"")
 stdscr = curses.initscr()
 curses.noecho()
 stdscr.keypad(1)
 
 started = datetime.now()
 wins = 0
+
 
 parser = OptionParser()
 parser.add_option("-r", "--repeat", dest="repeats",
@@ -17,12 +20,15 @@ parser.add_option("-r", "--repeat", dest="repeats",
 parser.add_option("-s", "--strategy", dest="strategy",
         help="Strategy to use")
 
+parser.add_option("-v", "--visible", action="store_true", default=False, 
+        dest="visible", help="Play visually")
+
 (options, args) = parser.parse_args()
 
 repeats = int(options.repeats) + 1
 try:
     for i in range(1,repeats):
-        g = Game(options.strategy)
+        g = Game(options.strategy, visual=options.visible, screen=stdscr)
         g.play()
         if g.game_won():
             wins +=1

@@ -52,7 +52,7 @@ class Card(object):
         return "[%s %s ]" % (self.rank[0].ljust(2), self.short_suit())
 
     def short_suit(self):
-        shorts = ["♥","♣", "♦", "♠"]
+        shorts = [u"♥",u"♣", u"♦", u"♠"]
         return shorts[self.suit[1]]
 
     def __eq__(self, other):
