@@ -5,4 +5,8 @@ It was Christmas break, and I was playing "Full Deck Solitaire" to pass some tim
 
 The implementation isn't exactly *playable* in the sense of a game, but it's runnable as a simulation with pluggable strategies.
 
-It was also a way for me to continue to hone my Python skills.
+All of the coded strategies are pretty naive and usually win about 1.5-2.5% of the games.  The internet seems to suggest 5% is about what a 'good player' can expect to win. 
+
+If by some miracle you find any of this code useful, you may have it under under the [WTFPL}(http://en.wikipedia.org/wiki/WTFPL) - enjoy.
+
+
